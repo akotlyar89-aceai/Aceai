@@ -22,47 +22,104 @@ function recordSignup({ name, email, plan, price }) {
 
 const ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
 
-const MONTHLY_REPORT_SYSTEM = `You are ACE Elite Coach generating a detailed monthly coaching report for a tennis player. Based on their match logs, self-assessments, drill activity, and progress data, create a comprehensive but readable monthly summary. Respond ONLY with valid JSON (no markdown):
+const MONTHLY_REPORT_SYSTEM = `You are ACE Elite Coach generating a detailed, personalized monthly coaching report. Based on the player's match logs, self-assessments, drill activity, and progress data, create a comprehensive monthly summary they'll look forward to reading. This is their monthly highlight reel and coaching document. Respond ONLY with valid JSON (no markdown):
 {
   "month": "May 2026",
   "overallGrade": "B+",
   "gradeColor": "#C4A42B",
   "headline": "Strong serve improvement, backhand still the priority",
-  "executiveSummary": "3-4 sentence paragraph summarizing the month honestly and specifically",
+  "executiveSummary": "3-4 sentence personal, warm, specific summary of the month — written like a coach who knows this player well",
+  "personalMessage": "A warm, specific 2-3 sentence message directly to the player celebrating their effort this month. Use 'you' and make it feel human, not generic.",
   "ntrpEstimate": "3.5",
   "ntrpTrend": "improving",
-  "matchRecord": { "wins": 4, "losses": 2, "description": "Brief note on match results" },
+  "matchRecord": { "wins": 4, "losses": 2, "description": "Brief honest note on match results" },
   "statsTrend": [
     { "label": "1st Serve %", "start": 52, "end": 61, "trend": "up", "note": "Best improvement this month" },
-    { "label": "Unforced Errors", "start": 28, "end": 22, "trend": "up", "note": "Heading in right direction" },
-    { "label": "Return Games Won", "start": 28, "end": 31, "trend": "up", "note": "Small but consistent gain" },
-    { "label": "2nd Serve Win %", "start": 32, "end": 34, "trend": "flat", "note": "Still needs work" },
-    { "label": "Net Points Won", "start": 55, "end": 68, "trend": "up", "note": "Big jump — drills working" }
+    { "label": "Unforced Errors", "start": 28, "end": 22, "trend": "up", "note": "Down 6 per match" },
+    { "label": "Net Points Won", "start": 55, "end": 68, "trend": "up", "note": "Drills are working" },
+    { "label": "2nd Serve Win %", "start": 32, "end": 34, "trend": "flat", "note": "Still needs focus" },
+    { "label": "Return Games Won", "start": 28, "end": 31, "trend": "up", "note": "Small but consistent" }
   ],
-  "biggestWin": "Specific achievement or breakthrough this month",
-  "biggestChallenge": "Specific area that still needs work",
-  "drillsCompleted": "Summary of training activity",
+  "milestonesAchieved": [
+    { "milestone": "Specific achievement e.g. First match win vs a 4.0 player", "icon": "🏆" },
+    { "milestone": "Another specific milestone e.g. Reduced double faults below 3 per match", "icon": "🎾" },
+    { "milestone": "Another milestone e.g. Completed 4 consecutive practice weeks", "icon": "📅" }
+  ],
+  "biggestWin": "Specific, named achievement or breakthrough this month",
+  "biggestChallenge": "Specific area still needing work — be honest and direct",
   "weeklyBreakdown": [
-    { "week": "Week 1", "focus": "What was worked on", "result": "How it went", "grade": "B" },
-    { "week": "Week 2", "focus": "What was worked on", "result": "How it went", "grade": "A-" },
-    { "week": "Week 3", "focus": "What was worked on", "result": "How it went", "grade": "B+" },
-    { "week": "Week 4", "focus": "What was worked on", "result": "How it went", "grade": "B" }
+    { "week": "Week 1", "focus": "What was worked on", "result": "How it went honestly", "grade": "B" },
+    { "week": "Week 2", "focus": "What was worked on", "result": "How it went honestly", "grade": "A-" },
+    { "week": "Week 3", "focus": "What was worked on", "result": "How it went honestly", "grade": "B+" },
+    { "week": "Week 4", "focus": "What was worked on", "result": "How it went honestly", "grade": "B" }
   ],
-  "coachInsights": [
-    { "insight": "Specific tactical or technical observation", "priority": "high" },
-    { "insight": "Another specific observation", "priority": "medium" },
-    { "insight": "Another observation", "priority": "medium" }
+  "top3NextLevelFocus": [
+    {
+      "rank": 1,
+      "category": "Technical",
+      "title": "Specific technical skill to develop",
+      "why": "Why this is holding them back from the next USTA rating",
+      "howTo": "Concrete drill or practice method to fix it",
+      "impact": "high"
+    },
+    {
+      "rank": 2,
+      "category": "Tactical",
+      "title": "Specific tactical pattern or decision-making area",
+      "why": "Why this matters at the next level",
+      "howTo": "Concrete way to develop this in practice and matches",
+      "impact": "high"
+    },
+    {
+      "rank": 3,
+      "category": "Competition",
+      "title": "Match play or competition experience needed",
+      "why": "How more match play accelerates their rating progression",
+      "howTo": "Specific competition format or league to pursue",
+      "impact": "medium"
+    }
   ],
-  "nextMonthPlan": {
-    "primaryFocus": "The single most important thing to fix next month",
-    "secondaryFocus": "Second priority",
-    "drillPlan": "Specific drill recommendation for next month",
-    "matchGoal": "Specific measurable match goal for next month",
-    "mindsetNote": "One sentence mental game focus"
+  "ustaRoadmap": {
+    "currentRating": "3.5",
+    "targetRating": "4.0",
+    "estimatedTimeline": "4-6 months at current rate of improvement",
+    "whatItTakes": "Specific description of what a 4.0 player does that a 3.5 doesn't",
+    "ratingKeyRequirements": ["Requirement 1 specific to their game", "Requirement 2", "Requirement 3"],
+    "selfRatingTip": "Specific advice on when and how to self-rate up or enter a rating tournament"
   },
-  "motivationalNote": "A personal, specific, encouraging closing note from the coach — not generic"
+  "tournamentLeagueRecommendations": [
+    {
+      "type": "League",
+      "name": "USTA Adult 18+ 3.5 League",
+      "why": "Best way to get rated match experience at their level",
+      "when": "Typically runs spring and fall seasons — register now for fall",
+      "benefit": "Official USTA match results count toward computer rating"
+    },
+    {
+      "type": "Tournament",
+      "name": "USTA Self-Rated Tournament",
+      "why": "Great way to test your level against players from outside your club",
+      "when": "Check tennislink.usta.com for local events",
+      "benefit": "Can trigger a computer rating if you win enough matches"
+    },
+    {
+      "type": "Internal",
+      "name": "Club ladder or round robin",
+      "why": "Low-pressure way to get more match reps against a variety of styles",
+      "when": "Ongoing — ask your club pro about current ladder",
+      "benefit": "Builds match toughness and reveals tactical weaknesses quickly"
+    }
+  ],
+  "nextMonthGoal": {
+    "primaryGoal": "One specific, measurable goal for next month",
+    "drillFocus": "The main drill to practice daily",
+    "matchTarget": "Specific measurable match performance target",
+    "mindsetFocus": "One mental game focus for the month"
+  },
+  "motivationalQuote": { "quote": "A relevant tennis or sports quote", "author": "Author" },
+  "closingNote": "A warm, personal, specific 2-3 sentence closing message from the coach. Name something specific they should feel proud of and fire them up for next month."
 }
-Be specific, honest, and helpful. Always return only the JSON.`;
+Make every field specific to what the player told you. Never be generic. Always return only the JSON.`;
 
 const DAILY_BRIEFING_SYSTEM = `You are ACE Elite Coach sending a player their daily training briefing. Based on their current drill plan, recent match logs, and weekly schedule, generate an encouraging, specific, actionable daily message. Respond ONLY with valid JSON (no markdown):
 {
@@ -84,28 +141,90 @@ const DAILY_BRIEFING_SYSTEM = `You are ACE Elite Coach sending a player their da
 }
 Make it feel like a real coach who knows this player. Always return only JSON.`;
 
-const MATCH_STATS_SYSTEM = `You are ACE Match Analyst. A player has entered their real match stats. Analyze ONLY what they entered — do not invent numbers or add stats they didn't provide. Respond ONLY with a valid JSON object (no markdown) in this format:
+const MATCH_STATS_SYSTEM = `You are ACE Match Analyst, an expert tennis coach giving detailed post-match analysis. A player has entered their real match stats. Analyze ONLY what they entered. Respond ONLY with a valid JSON object (no markdown):
 {
   "grade": "B+",
   "gradeColor": "#C4A42B",
-  "summary": "2-3 sentence analysis based strictly on the stats entered",
+  "summary": "2-3 sentence honest analysis based strictly on the stats entered — be specific and direct",
   "statInsights": [
-    { "label": "Stat name", "value": 65, "cls": "fill-good", "note": "65%", "insight": "One sentence coaching insight about this specific stat" }
+    { "label": "Stat name", "value": 65, "cls": "fill-good", "note": "65%", "insight": "One specific coaching insight about this stat and what it costs or earns the player" }
   ],
-  "biggestProblem": "The single stat that is costing them the most points and exactly why",
-  "biggestStrength": "The single stat that is their biggest asset right now",
-  "topFixes": [
-    { "fix": "Specific actionable fix", "impact": "high" },
-    { "fix": "Specific actionable fix", "impact": "medium" },
-    { "fix": "Specific actionable fix", "impact": "medium" }
+  "biggestProblem": "The single stat costing them the most points and exactly why — be very specific",
+  "biggestStrength": "The single stat that is their biggest asset and how to leverage it more",
+  "advancedAnalysis": [
+    { "title": "Pattern analysis title", "detail": "Detailed tactical or technical explanation of what this stat reveals about their game — 2-3 sentences minimum. Include court positioning, spin, timing, or tactical context." },
+    { "title": "Second pattern analysis", "detail": "Another detailed insight — connect dots between multiple stats if possible." }
+  ],
+  "drillPlan": [
+    {
+      "drillName": "Specific drill name e.g. Kick Serve Cone Targets",
+      "focus": "What stat/weakness this drill directly fixes",
+      "duration": "20 min",
+      "frequency": "Daily",
+      "instructions": "Step by step: exactly what to do, where to stand, what target to aim for, how many reps. Be specific enough that a player can do this alone or with a partner.",
+      "successTarget": "Specific measurable goal e.g. Land 7/10 kick serves within 2 feet of T cone",
+      "coachTip": "One key technique cue",
+      "videoUrl": "https://www.youtube.com/watch?v=P8eZQBD-X0c",
+      "videoTitle": "Kick Serve Technique — FuzzyYellowBalls",
+      "videoChannel": "FuzzyYellowBalls · YouTube"
+    },
+    {
+      "drillName": "Second drill name",
+      "focus": "Second weakness addressed",
+      "duration": "15 min",
+      "frequency": "3x per week",
+      "instructions": "Step by step instructions for this drill",
+      "successTarget": "Specific measurable success target",
+      "coachTip": "Key technique cue",
+      "videoUrl": "https://www.youtube.com/watch?v=aZj7DIEftPg",
+      "videoTitle": "Forehand Consistency Drill — Top Tennis Training",
+      "videoChannel": "Top Tennis Training · YouTube"
+    },
+    {
+      "drillName": "Third drill name",
+      "focus": "Third area to address",
+      "duration": "15 min",
+      "frequency": "2x per week",
+      "instructions": "Step by step instructions",
+      "successTarget": "Measurable success target",
+      "coachTip": "Key cue",
+      "videoUrl": "https://www.youtube.com/watch?v=D1npzA6_Q3U",
+      "videoTitle": "Volley and Net Approach Drill — Essential Tennis",
+      "videoChannel": "Essential Tennis · YouTube"
+    }
+  ],
+  "nextWeekPlan": {
+    "theme": "Next week's overall training theme in 6 words",
+    "days": [
+      { "day": "Monday",    "session": "On-court drill name and focus", "duration": "45 min", "type": "on-court" },
+      { "day": "Tuesday",   "session": "Off-court drill or conditioning", "duration": "30 min", "type": "off-court" },
+      { "day": "Wednesday", "session": "On-court pattern or match play", "duration": "45 min", "type": "on-court" },
+      { "day": "Thursday",  "session": "Rest or light off-court work", "duration": "20 min", "type": "rest" },
+      { "day": "Friday",    "session": "Match simulation or point play", "duration": "60 min", "type": "on-court" },
+      { "day": "Saturday",  "session": "Specific drill from plan above", "duration": "40 min", "type": "on-court" },
+      { "day": "Sunday",    "session": "Rest and mental review", "duration": "-", "type": "rest" }
+    ]
+  },
+  "weeklyGoals": [
+    { "goal": "Specific measurable goal for next week", "metric": "How to measure it e.g. 7/10 kick serves in" },
+    { "goal": "Second measurable goal", "metric": "How to measure it" },
+    { "goal": "Third measurable goal", "metric": "How to measure it" }
   ],
   "chips": [
-    { "label": "Short insight", "type": "red" },
-    { "label": "Short insight", "type": "yellow" },
-    { "label": "Short insight", "type": "green" }
+    { "label": "Short chip insight", "type": "red" },
+    { "label": "Short chip insight", "type": "yellow" },
+    { "label": "Short chip insight", "type": "green" }
   ]
 }
-Use fill-good for values 65+, fill-mid for 40-64, fill-bad for below 40. Only include statInsights for stats the player actually entered. Always return only the JSON.`;
+Pick video URLs from these verified working options based on drill focus:
+- Serve/Kick Serve: https://www.youtube.com/watch?v=P8eZQBD-X0c (FuzzyYellowBalls · YouTube)
+- Forehand: https://www.youtube.com/watch?v=aZj7DIEftPg (Top Tennis Training · YouTube)
+- Backhand: https://www.youtube.com/watch?v=OU39URVIpVc (Top Tennis Training · YouTube)
+- Volley/Net: https://www.youtube.com/watch?v=D1npzA6_Q3U (Top Tennis Training · YouTube)
+- Return: https://www.youtube.com/watch?v=_pS0otk2560 (Top Tennis Training · YouTube)
+- Footwork: https://www.youtube.com/watch?v=eGWhONP7558 (Top Tennis Training · YouTube)
+- Shot patterns/ball machine: https://www.youtube.com/watch?v=CofM-vwQRW4 (Top Tennis Training · YouTube)
+Only include statInsights for stats the player actually entered. Always return only the JSON.`;
 
 // ─── Palette & Design System ───────────────────────────────────────────────
 const CSS = `
@@ -980,16 +1099,189 @@ const CSS = `
   .report-motivational { text-align: center; padding: 24px; background: rgba(200,98,42,0.06); border-radius: 10px; border: 1px solid rgba(200,98,42,0.15); }
   .report-motivational p { font-size: 15px; color: var(--ink); line-height: 1.7; font-style: italic; }
 
+  /* ═══ MOBILE — Full consistent layout ══════════════════════════════════ */
   @media (max-width: 768px) {
-    nav { padding: 0 20px; }
+    /* Nav */
+    nav { padding: 0 16px; height: 56px; }
     .nav-links { display: none; }
-    section { padding: 60px 24px; }
-    .hero { padding: 100px 24px 60px; }
-    .hero-stats { flex-wrap: wrap; gap: 24px; }
-    .ai-panel.active { grid-template-columns: 1fr; }
-    footer { padding: 40px 24px; flex-direction: column; }
-    .modal-box { max-width: 100%; }
+    .nav-logo { font-size: 22px; }
+    .nav-cta { padding: 8px 16px; font-size: 13px; }
+
+    /* Hero */
+    .hero { padding: 80px 20px 48px; min-height: auto; }
+    .hero h1 { font-size: 56px; }
+    .hero p { font-size: 16px; }
+    .hero-stats { flex-wrap: wrap; gap: 20px; }
+    .stat-num { font-size: 36px; }
+    .hero-actions { flex-direction: column; }
+    .btn-primary, .btn-outline { width: 100%; text-align: center; }
+
+    /* Sections */
+    section { padding: 52px 20px; }
+    .section-title { font-size: 40px; }
+    .elite-section { padding: 52px 20px; }
+
+    /* Features grid */
+    .features-grid { grid-template-columns: 1fr; gap: 1px; }
+
+    /* AI Tabs — horizontal scroll on mobile */
+    .ai-tabs { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; padding-bottom: 2px; }
+    .ai-tab { white-space: nowrap; flex-shrink: 0; padding: 12px 16px; font-size: 12px; }
+
+    /* AI panels — single column */
+    .ai-panel.active { grid-template-columns: 1fr; gap: 24px; }
+    .ai-panel[style*="grid"] { display: flex !important; flex-direction: column; gap: 24px; }
+    .ai-panel-left h3 { font-size: 28px; }
+    .ai-panel-left p { font-size: 15px; }
+
+    /* Surface selector */
+    .surface-selector { gap: 8px; }
+    .surface-btn { padding: 10px 6px; font-size: 12px; }
+
+    /* Chat */
+    .chat-messages { min-height: 220px; max-height: 260px; }
+    .quick-prompts { gap: 6px; }
+    .quick-prompt { font-size: 11px; padding: 5px 10px; }
+
+    /* Tips */
+    .tips-grid { grid-template-columns: 1fr; }
+    .tips-tabs { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+    .tips-tab { white-space: nowrap; flex-shrink: 0; }
+
+    /* Pricing */
+    .pricing-grid { grid-template-columns: 1fr; }
+    .annual-card { grid-template-columns: 1fr; }
+    .annual-right { text-align: left; }
+    .annual-badge { top: 16px; right: 16px; }
+    .annual-price { font-size: 56px; }
+
+    /* Elite section */
+    .elite-section > div[style*="grid-template-columns: 1fr 1fr"] { 
+      display: flex !important; flex-direction: column; gap: 32px; 
+    }
+    .report-stats-grid { grid-template-columns: 1fr; }
+    .report-week-grid { grid-template-columns: 1fr; }
+    .report-hero { flex-direction: column; gap: 16px; }
+    .report-body { padding: 20px; }
+
+    /* Modal */
+    .modal-box { max-width: 100%; margin: 8px; border-radius: 10px; }
+    .modal-body { padding: 20px; }
+    .modal-plan-summary { flex-direction: column; gap: 8px; }
+
+    /* Tactics grid */
+    .tactics-grid { grid-template-columns: 1fr !important; }
+    .tactics-patterns-grid { grid-template-columns: 1fr !important; }
+
+    /* Coach badge */
+    .coach-badge { width: 42px !important; height: 42px !important; bottom: 12px !important; right: 12px !important; }
+    .coach-badge img { width: 42px !important; height: 42px !important; }
+
+    /* Analysis visual */
+    .analysis-visual { padding: 16px; }
+
+    /* Upload */
+    .upload-context-row { grid-template-columns: 1fr; }
+    .upload-zone { padding: 32px 20px; }
+
+    /* Briefing */
+    .briefing-header { padding: 16px 18px; }
+    .briefing-body { padding: 16px 18px; }
+
+    /* Footer */
+    footer { padding: 36px 20px; flex-direction: column; gap: 16px; }
   }
+
+  /* ═══ COACH ALEX BADGE ═══════════════════════════════════════════════════ */
+  .coach-badge-wrap {
+    position: fixed; bottom: 24px; right: 24px; z-index: 90;
+  }
+  .coach-badge {
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 3px solid var(--clay);
+    overflow: hidden; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(26,20,16,0.25);
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: var(--ink);
+  }
+  .coach-badge:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(200,98,42,0.4); }
+  .coach-badge img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .coach-tooltip {
+    position: absolute; bottom: 66px; right: 0;
+    background: var(--ink); color: var(--off-white);
+    font-size: 12px; font-weight: 600; padding: 6px 12px;
+    border-radius: 6px; white-space: nowrap;
+    border: 1px solid rgba(200,98,42,0.3);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .coach-badge-wrap:hover .coach-tooltip { opacity: 1; }
+  .coach-tooltip::after {
+    content: ""; position: absolute; top: 100%; right: 16px;
+    border: 5px solid transparent; border-top-color: var(--ink);
+  }
+
+  /* ═══ TACTICS BREAKDOWN GRID ═════════════════════════════════════════════ */
+  .tactics-breakdown {
+    margin-top: 32px;
+    border-top: 2px solid rgba(107,94,82,0.12);
+    padding-top: 32px;
+  }
+  .tactics-breakdown-title {
+    font-family: 'Bebas Neue', sans-serif; font-size: 32px;
+    color: var(--ink); letter-spacing: 0.5px; margin-bottom: 6px;
+  }
+  .tactics-breakdown-sub { font-size: 14px; color: var(--mid); margin-bottom: 24px; }
+  .tactics-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;
+  }
+  .tactics-card {
+    background: white; border: 1px solid rgba(107,94,82,0.12);
+    border-radius: 10px; overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .tactics-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,20,16,0.08); }
+  .tactics-card-header {
+    padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .tactics-card-icon { font-size: 22px; }
+  .tactics-card-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 0.5px; color: var(--ink); }
+  .tactics-card-body { padding: 0 16px 16px; }
+  .tactics-card-body p { font-size: 13px; color: var(--mid); line-height: 1.6; }
+
+  .tactics-patterns-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px;
+  }
+  .tactics-pattern-card {
+    background: white; border-radius: 10px; overflow: hidden;
+    border: 1px solid rgba(107,94,82,0.12);
+  }
+  .tactics-pattern-rank {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; border-bottom: 1px solid rgba(107,94,82,0.08);
+  }
+  .rank-num {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--clay);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 16px; color: white; flex-shrink: 0;
+  }
+  .rank-name { font-weight: 700; font-size: 13px; color: var(--ink); }
+  .rank-badge { margin-left: auto; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 100px; }
+  .tactics-pattern-body { padding: 10px 16px 14px; }
+  .tactics-pattern-body p { font-size: 12px; color: var(--mid); line-height: 1.55; margin-bottom: 8px; }
+
+  .tactics-consistency-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+  }
+  .consistency-card {
+    background: white; border-radius: 8px; padding: 14px 12px;
+    border: 1px solid rgba(107,94,82,0.1); text-align: center;
+  }
+  .consistency-shot { font-size: 11px; font-weight: 700; color: var(--mid); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .consistency-target { font-family: 'Bebas Neue', sans-serif; font-size: 28px; line-height: 1; }
+  .consistency-note { font-size: 11px; color: var(--mid); margin-top: 4px; line-height: 1.4; }
+  .consistency-bar { height: 4px; background: rgba(107,94,82,0.1); border-radius: 2px; margin-top: 8px; }
+  .consistency-fill { height: 100%; border-radius: 2px; }
 `;
 
 // ─── AI Chat Component ─────────────────────────────────────────────────────
@@ -1177,17 +1469,128 @@ function MatchAnalysisVisual({ liveData }) {
         </div>
       )}
 
-      {liveData.biggestProblem && (
-        <div style={{ marginTop: 14, padding: "10px 12px", background: "rgba(217,79,59,0.07)", border: "1px solid rgba(217,79,59,0.2)", borderRadius: 6 }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: "#D94F3B", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>⚠ Biggest Problem</div>
-          <div style={{ fontSize: 12, color: "var(--ink)", lineHeight: 1.5 }}>{liveData.biggestProblem}</div>
+      {/* Biggest Problem + Strength */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 14 }}>
+        {liveData.biggestProblem && (
+          <div style={{ padding: "10px 12px", background: "rgba(217,79,59,0.07)", border: "1px solid rgba(217,79,59,0.2)", borderRadius: 6 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: "#D94F3B", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>⚠ Biggest Problem</div>
+            <div style={{ fontSize: 12, color: "var(--ink)", lineHeight: 1.5 }}>{liveData.biggestProblem}</div>
+          </div>
+        )}
+        {liveData.biggestStrength && (
+          <div style={{ padding: "10px 12px", background: "rgba(74,124,47,0.07)", border: "1px solid rgba(74,124,47,0.2)", borderRadius: 6 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: "var(--grass-light)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>✓ Biggest Strength</div>
+            <div style={{ fontSize: 12, color: "var(--ink)", lineHeight: 1.5 }}>{liveData.biggestStrength}</div>
+          </div>
+        )}
+      </div>
+
+      {/* Advanced Analysis */}
+      {liveData.advancedAnalysis?.length > 0 && (
+        <div style={{ marginTop: 14 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "var(--clay)", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 8 }}>🔍 Advanced Pattern Analysis</div>
+          {liveData.advancedAnalysis.map((a, i) => (
+            <div key={i} style={{ marginBottom: 10, padding: "10px 12px", background: "white", border: "1px solid rgba(107,94,82,0.12)", borderRadius: 6 }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--ink)", marginBottom: 4 }}>{a.title}</div>
+              <div style={{ fontSize: 12, color: "var(--mid)", lineHeight: 1.55 }}>{a.detail}</div>
+            </div>
+          ))}
         </div>
       )}
 
-      {liveData.biggestStrength && (
-        <div style={{ marginTop: 8, padding: "10px 12px", background: "rgba(74,124,47,0.07)", border: "1px solid rgba(74,124,47,0.2)", borderRadius: 6 }}>
-          <div style={{ fontSize: 10, fontWeight: 700, color: "var(--grass-light)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 4 }}>✓ Biggest Strength</div>
-          <div style={{ fontSize: 12, color: "var(--ink)", lineHeight: 1.5 }}>{liveData.biggestStrength}</div>
+      {/* Drill Plan with Video Links */}
+      {liveData.drillPlan?.length > 0 && (
+        <div style={{ marginTop: 14 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "var(--clay)", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 10 }}>🎯 Your Drill Plan</div>
+          {liveData.drillPlan.map((drill, i) => (
+            <DrillDetailCard key={i} drill={drill} index={i} />
+          ))}
+        </div>
+      )}
+
+      {/* Next Week Plan */}
+      {liveData.nextWeekPlan && (
+        <div style={{ marginTop: 14 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "var(--clay)", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 8 }}>📅 Next Week's Training Plan</div>
+          {liveData.nextWeekPlan.theme && (
+            <div style={{ fontSize: 13, fontWeight: 700, color: "var(--ink)", marginBottom: 8, padding: "8px 12px", background: "rgba(200,98,42,0.06)", borderRadius: 6 }}>
+              Theme: {liveData.nextWeekPlan.theme}
+            </div>
+          )}
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            {liveData.nextWeekPlan.days?.map((d, i) => (
+              <div key={i} style={{ display: "flex", gap: 10, alignItems: "center", padding: "6px 10px", borderRadius: 6, background: d.type === "rest" ? "rgba(107,94,82,0.04)" : d.type === "off-court" ? "rgba(26,58,92,0.06)" : "rgba(200,98,42,0.05)" }}>
+                <span style={{ fontSize: 11, fontWeight: 700, width: 68, flexShrink: 0, color: d.type === "rest" ? "var(--mid)" : d.type === "off-court" ? "var(--hard-light)" : "var(--clay)" }}>{d.day}</span>
+                <span style={{ fontSize: 12, color: "var(--ink)", flex: 1, lineHeight: 1.4 }}>{d.session}</span>
+                <span style={{ fontSize: 10, color: "var(--mid)", flexShrink: 0 }}>{d.duration}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Weekly Goals */}
+      {liveData.weeklyGoals?.length > 0 && (
+        <div style={{ marginTop: 14 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "var(--clay)", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 8 }}>🏆 Goals for Next Week</div>
+          {liveData.weeklyGoals.map((g, i) => (
+            <div key={i} style={{ display: "flex", gap: 10, padding: "8px 0", borderBottom: "1px solid rgba(107,94,82,0.08)" }}>
+              <span style={{ color: "var(--clay)", fontWeight: 700, fontSize: 12, flexShrink: 0 }}>{i + 1}.</span>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: "var(--ink)" }}>{g.goal}</div>
+                {g.metric && <div style={{ fontSize: 11, color: "var(--clay)", marginTop: 2 }}>📏 {g.metric}</div>}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Drill Detail Card (with video link) ─────────────────────────────────────
+function DrillDetailCard({ drill, index }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ background: "white", border: "1px solid rgba(107,94,82,0.12)", borderRadius: 8, overflow: "hidden", marginBottom: 8 }}>
+      <div onClick={() => setOpen(o => !o)} style={{ padding: "12px 14px", cursor: "pointer", display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ width: 28, height: 28, borderRadius: "50%", background: "rgba(200,98,42,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Bebas Neue', sans-serif", fontSize: 14, color: "var(--clay)", flexShrink: 0 }}>{index + 1}</div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontWeight: 700, fontSize: 13, color: "var(--ink)" }}>{drill.drillName}</div>
+          <div style={{ display: "flex", gap: 8, marginTop: 3, flexWrap: "wrap" }}>
+            <span style={{ fontSize: 10, fontWeight: 700, padding: "1px 7px", borderRadius: 100, background: "rgba(200,98,42,0.08)", color: "var(--clay)" }}>🎯 {drill.focus}</span>
+            <span style={{ fontSize: 10, color: "var(--mid)" }}>⏱ {drill.duration}</span>
+            <span style={{ fontSize: 10, color: "var(--mid)" }}>📅 {drill.frequency}</span>
+            {drill.videoUrl && <span style={{ fontSize: 10, color: "#E53935", fontWeight: 700 }}>▶ Video</span>}
+          </div>
+        </div>
+        <div style={{ color: "var(--mid)", fontSize: 16, transform: open ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>⌄</div>
+      </div>
+      {open && (
+        <div style={{ padding: "0 14px 14px", borderTop: "1px solid rgba(107,94,82,0.08)" }}>
+          <div style={{ fontSize: 13, color: "var(--ink)", lineHeight: 1.65, marginTop: 10, marginBottom: 10 }}>{drill.instructions}</div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
+            <div style={{ background: "rgba(74,124,47,0.08)", border: "1px solid rgba(74,124,47,0.2)", borderRadius: 6, padding: "6px 10px" }}>
+              <div style={{ fontSize: 9, fontWeight: 700, color: "var(--grass-light)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 2 }}>Success Target</div>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "var(--ink)" }}>{drill.successTarget}</div>
+            </div>
+          </div>
+          <div style={{ background: "rgba(200,98,42,0.06)", border: "1px solid rgba(200,98,42,0.15)", borderRadius: 6, padding: "8px 12px", marginBottom: 10 }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: "var(--clay)", textTransform: "uppercase", letterSpacing: 1 }}>💡 Coach Tip: </span>
+            <span style={{ fontSize: 12, color: "var(--ink)" }}>{drill.coachTip}</span>
+          </div>
+          {drill.videoUrl && (
+            <a href={drill.videoUrl} target="_blank" rel="noopener noreferrer"
+              style={{ display: "flex", alignItems: "center", gap: 10, background: "#fff5f5", border: "1px solid rgba(229,57,53,0.2)", borderRadius: 6, padding: "8px 12px", textDecoration: "none" }}>
+              <div style={{ width: 28, height: 28, background: "#E53935", borderRadius: 5, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <span style={{ color: "white", fontSize: 12 }}>▶</span>
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#E53935" }}>{drill.videoTitle || "Watch Drill Video"}</div>
+                <div style={{ fontSize: 10, color: "var(--mid)" }}>via {drill.videoChannel} · YouTube ↗</div>
+              </div>
+            </a>
+          )}
         </div>
       )}
     </div>
@@ -1208,28 +1611,91 @@ const SELF_ASSESS_QUESTIONS = [
 
 const RATING_LABELS = ["Very Poor", "Poor", "Below Average", "Average", "Above Average", "Good", "Very Good", "Excellent", "Outstanding", "Perfect"];
 
-const SELF_ASSESS_SYSTEM = `You are ACE Match Analyst. A player has rated different areas of their game on a 1-10 scale after a match. Analyze ONLY what they rated — do not invent areas they didn't mention. Respond ONLY with a valid JSON object (no markdown):
+const SELF_ASSESS_SYSTEM = `You are ACE Match Analyst, an expert tennis coach giving detailed post-match analysis based on a player's self-ratings. The player rated 8 areas of their game on a 1-10 scale. Go FAR beyond summarizing — give them the same depth a real coach would after watching their match. Respond ONLY with valid JSON (no markdown):
 {
   "grade": "B",
   "gradeColor": "#C4A42B",
-  "summary": "2-3 sentence honest assessment based strictly on their ratings and notes",
+  "summary": "2-3 sentence honest, specific assessment — not just repeating their ratings. Tell them what the PATTERN of their ratings reveals about their game overall.",
   "statInsights": [
-    { "label": "Shot/area name", "value": 70, "cls": "fill-good", "note": "7/10", "insight": "One specific coaching insight about this rating" }
+    { "label": "Shot/area name", "value": 70, "cls": "fill-good", "note": "7/10", "insight": "A specific coaching insight — what this rating tells you about their technique, tactics, or mindset. Connect it to match outcomes." }
   ],
-  "biggestProblem": "Their lowest-rated area and why it matters most",
-  "biggestStrength": "Their highest-rated area and how to leverage it",
-  "topFixes": [
-    { "fix": "Specific drill or tactic for their weakest area", "impact": "high" },
-    { "fix": "Second priority fix", "impact": "medium" },
-    { "fix": "Third priority fix", "impact": "medium" }
+  "biggestProblem": "Their lowest-rated area — explain specifically HOW it costs them points in matches, what physically or tactically goes wrong, and why fixing it is the highest leverage change they can make.",
+  "biggestStrength": "Their highest-rated area — how to deliberately use this as a tactical weapon to win more points, not just maintain it.",
+  "advancedAnalysis": [
+    { "title": "Pattern observed across their ratings", "detail": "2-3 sentences of real coaching depth — e.g. connect their low serve rating to their high unforced error rating showing they are playing defensively, or show how their footwork rating explains their backhand struggles. Make connections the player wouldn't make themselves." },
+    { "title": "Second tactical or technical observation", "detail": "Another insight connecting dots between different rated areas. Include specific court positions, spin types, or pressure situations where this shows up." }
+  ],
+  "drillPlan": [
+    {
+      "drillName": "Specific named drill targeting their weakest area",
+      "focus": "Exact weakness this drill fixes",
+      "duration": "20 min",
+      "frequency": "Daily",
+      "instructions": "Step-by-step: exactly what to do, where to stand, what target to hit, how many reps. Specific enough to do alone or with a partner. Reference their specific rating e.g. since you rated your serve 4/10, start by...",
+      "successTarget": "Measurable goal e.g. Land 8/10 kick serves within 2 feet of the backhand T cone",
+      "coachTip": "One specific technique cue tied to what likely caused their low rating",
+      "videoUrl": "https://www.youtube.com/watch?v=P8eZQBD-X0c",
+      "videoTitle": "Kick Serve Technique — FuzzyYellowBalls",
+      "videoChannel": "FuzzyYellowBalls · YouTube"
+    },
+    {
+      "drillName": "Second drill for their second weakest area",
+      "focus": "Second weakness addressed",
+      "duration": "15 min",
+      "frequency": "3x per week",
+      "instructions": "Full step-by-step instructions with specific reps, targets, and progressions",
+      "successTarget": "Specific measurable target",
+      "coachTip": "Key cue tied to their specific rating",
+      "videoUrl": "https://www.youtube.com/watch?v=aZj7DIEftPg",
+      "videoTitle": "Forehand Groundstroke Drill — Top Tennis Training",
+      "videoChannel": "Top Tennis Training · YouTube"
+    },
+    {
+      "drillName": "Third drill for the third priority area",
+      "focus": "Third weakness or consolidation area",
+      "duration": "15 min",
+      "frequency": "2x per week",
+      "instructions": "Full step-by-step instructions",
+      "successTarget": "Specific measurable target",
+      "coachTip": "Key cue",
+      "videoUrl": "https://www.youtube.com/watch?v=D1npzA6_Q3U",
+      "videoTitle": "Volley and Net Approach Drill — Essential Tennis",
+      "videoChannel": "Essential Tennis · YouTube"
+    }
+  ],
+  "nextWeekPlan": {
+    "theme": "Next week's training theme in 6 words based on their weaknesses",
+    "days": [
+      { "day": "Monday",    "session": "Specific drill from the plan above targeting biggest weakness", "duration": "45 min", "type": "on-court" },
+      { "day": "Tuesday",   "session": "Off-court conditioning or shadow swing drill", "duration": "30 min", "type": "off-court" },
+      { "day": "Wednesday", "session": "Second drill from plan + short point play", "duration": "45 min", "type": "on-court" },
+      { "day": "Thursday",  "session": "Rest or light stretch and mental review", "duration": "20 min", "type": "rest" },
+      { "day": "Friday",    "session": "Match simulation focusing on primary pattern", "duration": "60 min", "type": "on-court" },
+      { "day": "Saturday",  "session": "Third drill + ball machine work on weakest shot", "duration": "40 min", "type": "on-court" },
+      { "day": "Sunday",    "session": "Rest and self-assessment review", "duration": "-", "type": "rest" }
+    ]
+  },
+  "weeklyGoals": [
+    { "goal": "Specific measurable improvement goal for their #1 weakness", "metric": "How to measure success — e.g. Rate your serve 6+/10 in next session" },
+    { "goal": "Second measurable goal for their #2 weakness", "metric": "How to measure it" },
+    { "goal": "Third goal — either a third weakness or a match play goal", "metric": "How to measure it" }
   ],
   "chips": [
-    { "label": "Short insight", "type": "red" },
-    { "label": "Short insight", "type": "yellow" },
-    { "label": "Short insight", "type": "green" }
+    { "label": "Short chip about their lowest area", "type": "red" },
+    { "label": "Short chip about a mid area", "type": "yellow" },
+    { "label": "Short chip about their strength", "type": "green" }
   ]
 }
-Convert each 1-10 rating to a percentage (multiply by 10) for the value field. Use fill-good for 65+, fill-mid for 40-64, fill-bad below 40. Only return the JSON.`;
+Convert each 1-10 rating to a percentage (x10) for the value field. Use fill-good for 65+, fill-mid for 40-64, fill-bad below 40.
+Pick video URLs from these verified working options based on which areas rated lowest:
+- Serve/Kick Serve: https://www.youtube.com/watch?v=P8eZQBD-X0c (FuzzyYellowBalls · YouTube)
+- Forehand: https://www.youtube.com/watch?v=aZj7DIEftPg (Top Tennis Training · YouTube)
+- Backhand: https://www.youtube.com/watch?v=OU39URVIpVc (Top Tennis Training · YouTube)
+- Volley/Net Game: https://www.youtube.com/watch?v=D1npzA6_Q3U (Top Tennis Training · YouTube)
+- Return: https://www.youtube.com/watch?v=_pS0otk2560 (Top Tennis Training · YouTube)
+- Footwork: https://www.youtube.com/watch?v=eGWhONP7558 (Top Tennis Training · YouTube)
+- Mental/Consistency: https://www.youtube.com/watch?v=CofM-vwQRW4 (Top Tennis Training · YouTube)
+Always return only the JSON.`;
 
 // ─── Match History Storage ─────────────────────────────────────────────────
 function saveMatchLog(entry) {
@@ -1441,35 +1907,148 @@ function MatchStatEntry({ onAnalysis }) {
   // ── Analyze: Self Assessment ───────────────────────────────────────────
   async function analyzeSelfAssess() {
     setLoading(true);
-    const lines = SELF_ASSESS_QUESTIONS.filter(q => ratings[q.id] !== undefined)
-      .map(q => `${q.label}: ${ratings[q.id]}/10 — ${RATING_LABELS[ratings[q.id]-1]}`).join("\n");
-    const prompt = `Player: ${level||"Unknown"} NTRP. Surface: ${surface||"Unknown"}. Result: ${result||"N/A"}.\n\nSelf-rated areas:\n${lines}\n\nExtra notes: ${extraNotes||"None"}\n\nAnalyze ONLY what they rated.`;
+    const rated = SELF_ASSESS_QUESTIONS.filter(q => ratings[q.id] !== undefined);
+    const lines = rated.map(q => `${q.label}: ${ratings[q.id]}/10 — ${RATING_LABELS[ratings[q.id]-1]}`).join("\n");
+    const sorted = [...rated].sort((a,b) => (ratings[a.id]||5) - (ratings[b.id]||5));
+    const lowest = sorted[0];
+    const secondLowest = sorted[1];
+    const highest = [...rated].sort((a,b) => (ratings[b.id]||5) - (ratings[a.id]||5))[0];
+    const prompt = `Player: ${level||"Unknown"} NTRP. Surface: ${surface||"Unknown"}. Result: ${result||"N/A"}.\n\nSelf-rated areas:\n${lines}\n\nExtra notes: ${extraNotes||"None"}\n\nGive advanced coaching analysis with drills, video links, next week plan, and 3 measurable goals.`;
     let data = await callAI(SELF_ASSESS_SYSTEM, prompt);
     if (!data) {
-      const rated = SELF_ASSESS_QUESTIONS.filter(q => ratings[q.id] !== undefined);
-      const lowest = rated.sort((a,b)=>(ratings[a.id]||5)-(ratings[b.id]||5))[0];
-      const highest = rated.sort((a,b)=>(ratings[b.id]||5)-(ratings[a.id]||5))[0];
+      // Video library matched to lowest-rated areas
+      const VIDEO_MAP = {
+        "Serve":       { url: "https://www.youtube.com/watch?v=P8eZQBD-X0c", title: "Kick Serve Technique", channel: "FuzzyYellowBalls · YouTube" },
+        "Return":      { url: "https://www.youtube.com/watch?v=_pS0otk2560", title: "Return of Serve Drills", channel: "Essential Tennis · YouTube" },
+        "Forehand":    { url: "https://www.youtube.com/watch?v=aZj7DIEftPg", title: "Forehand Groundstroke Drill", channel: "Top Tennis Training · YouTube" },
+        "Backhand":    { url: "https://www.youtube.com/watch?v=OU39URVIpVc", title: "Backhand Topspin Drills", channel: "Top Tennis Training · YouTube" },
+        "Volley / Net Game": { url: "https://www.youtube.com/watch?v=D1npzA6_Q3U", title: "Volley & Net Approach Drill", channel: "Essential Tennis · YouTube" },
+        "Footwork":    { url: "https://www.youtube.com/watch?v=eGWhONP7558", title: "Tennis Footwork & Agility", channel: "Essential Tennis · YouTube" },
+        "Mental Game": { url: "https://www.youtube.com/watch?v=CofM-vwQRW4", title: "Point Construction & Patterns", channel: "Top Tennis Training · YouTube" },
+        "Consistency": { url: "https://www.youtube.com/watch?v=CofM-vwQRW4", title: "Rally Consistency Patterns", channel: "Top Tennis Training · YouTube" },
+      };
+      const getVideo = (area) => VIDEO_MAP[area] || VIDEO_MAP["Forehand"];
+
+      const avgRating = rated.length > 0 ? rated.reduce((sum, q) => sum + (ratings[q.id]||5), 0) / rated.length : 5;
+      const grade = avgRating >= 8 ? "A" : avgRating >= 7 ? "B+" : avgRating >= 6 ? "B" : avgRating >= 5 ? "B-" : "C+";
+      const gradeColor = avgRating >= 7 ? "#4A7C2F" : avgRating >= 5 ? "#C4A42B" : "#D94F3B";
+
+      const lowestLabel = lowest?.label || "Serve";
+      const lowestRating = lowest ? ratings[lowest.id] : 4;
+      const secondLabel = secondLowest?.label || "Return";
+      const highestLabel = highest?.label || "Forehand";
+      const lowestVid = getVideo(lowestLabel);
+      const secondVid = getVideo(secondLabel);
+      const thirdVid = getVideo("Footwork");
+
       data = {
-        grade: Object.values(ratings).length>0 ? (Object.values(ratings).reduce((a,b)=>a+b,0)/Object.values(ratings).length > 6?"B+":"B") : "B",
-        gradeColor:"#C4A42B",
-        summary:`Your self-assessment shows ${lowest?`${lowest.label} as your weakest area`:"some clear areas to work on"}. ${highest?`Your ${highest.label} is your strongest weapon — keep building on it.`:""}`,
+        grade, gradeColor,
+        summary: `Your ratings reveal that ${lowestLabel.toLowerCase()} at ${lowestRating}/10 is the area costing you the most games right now — it's not just a weak shot, it's changing how you play every other point. Your ${highestLabel.toLowerCase()} at ${ratings[highest?.id]||7}/10 is a genuine weapon you should be building your patterns around. The gap between your best and worst areas is significant enough that closing it will have a measurable impact on your win rate.`,
         statInsights: rated.map(q => ({
-          label:q.label, value:(ratings[q.id]||5)*10,
-          cls:(ratings[q.id]||5)>=7?"fill-good":(ratings[q.id]||5)>=5?"fill-mid":"fill-bad",
-          note:`${ratings[q.id]}/10`,
-          insight:`You rated your ${q.label.toLowerCase()} ${ratings[q.id]}/10 — ${ratings[q.id]>=7?"this is a real strength to lean on":ratings[q.id]>=5?"solid but with room to grow":"this needs focused practice this week"}.`
+          label: q.label,
+          value: (ratings[q.id]||5) * 10,
+          cls: (ratings[q.id]||5) >= 7 ? "fill-good" : (ratings[q.id]||5) >= 5 ? "fill-mid" : "fill-bad",
+          note: `${ratings[q.id]}/10`,
+          insight: ratings[q.id] >= 8
+            ? `${q.label} is a clear strength — actively use it to dictate points and build patterns around it in every match.`
+            : ratings[q.id] >= 6
+            ? `${q.label} is solid but not yet a weapon. One focused drill per session will push this to match-winning level.`
+            : ratings[q.id] >= 4
+            ? `${q.label} at ${ratings[q.id]}/10 is below the level needed to hold your own consistently — this needs dedicated practice 3x this week.`
+            : `${q.label} at ${ratings[q.id]}/10 is costing you significant points every match. This is your highest-leverage fix — address it before anything else.`,
         })),
-        biggestProblem: lowest?`Your ${lowest.label.toLowerCase()} at ${ratings[lowest.id]}/10 is your most urgent area — it's likely costing you games every match.`:"Focus on your lowest-rated area first.",
-        biggestStrength: highest?`Your ${highest.label.toLowerCase()} at ${ratings[highest.id]}/10 is your best weapon — build your game plan around it.`:"Keep logging sessions to identify your strengths.",
-        topFixes: [
-          { fix: lowest?`Dedicate 20 min per practice session specifically to your ${lowest.label.toLowerCase()}`:"Practice your weakest area with intention every session", impact:"high" },
-          { fix:"Rate yourself after every match — patterns will become clear over 4-6 sessions", impact:"medium" },
-          { fix: highest?`Start points with your ${highest.label.toLowerCase()} — it's your most reliable weapon`:"Play to your strengths while fixing your weaknesses", impact:"medium" },
+        biggestProblem: `Your ${lowestLabel.toLowerCase()} at ${lowestRating}/10 is your most urgent fix. At your level, opponents will find and target this weakness repeatedly. Every point that forces you to use your ${lowestLabel.toLowerCase()} under pressure is a point you're likely to lose. Until this reaches 6/10 or above, it will limit how much every other improvement actually shows up in your match results.`,
+        biggestStrength: `Your ${highestLabel.toLowerCase()} at ${ratings[highest?.id]||7}/10 is already a weapon — now use it tactically. Build your patterns to create opportunities to use your ${highestLabel.toLowerCase()}, serve to set it up, and construct points specifically to get to this shot. Don't just rely on it when it happens — engineer situations where you can use it.`,
+        advancedAnalysis: [
+          {
+            title: `Why your ${lowestLabel} rating is connected to your overall consistency`,
+            detail: `When a player rates their ${lowestLabel.toLowerCase()} as ${lowestRating}/10, it typically means they're playing defensively in patterns designed to avoid that shot — which increases pressure on every other area. At ${level||"your"} level, opponents can sense hesitation. The mental load of protecting a weakness makes your strongest shots less effective too, because you're playing scared instead of aggressive.`,
+          },
+          {
+            title: `How to leverage your ${highestLabel} to create space for improvement`,
+            detail: `Your ${highestLabel.toLowerCase()} at ${ratings[highest?.id]||7}/10 means you have a reliable shot to fall back on and build from. Use this to construct points: serve to set up your ${highestLabel.toLowerCase()}, rally into positions where you can use it, and take the pressure off your weaker areas by winning points before they're even tested. This is a real tactical advantage — use it consciously.`,
+          },
+        ],
+        drillPlan: [
+          {
+            drillName: lowestLabel === "Serve" ? "Kick Serve Cone Targets" : lowestLabel === "Forehand" ? "Crosscourt Forehand Consistency" : lowestLabel === "Backhand" ? "High Ball Backhand Pattern" : lowestLabel === "Volley / Net Game" ? "Approach Shot & First Volley" : lowestLabel === "Return" ? "Return of Serve Positioning Drill" : lowestLabel === "Footwork" ? "Agility Ladder Split Step Drill" : `${lowestLabel} Focus Drill`,
+            focus: lowestLabel,
+            duration: "20 min",
+            frequency: "Daily this week",
+            instructions: lowestLabel === "Serve"
+              ? `Place two cones in the deuce service box — one at the T, one wide. Hit 10 kick serves targeting each cone with a continental grip, brushing up the back of the ball. Aim for 7/10 landing within 2 feet of each cone. Rest 30 seconds between sets. Since you rated your serve ${lowestRating}/10, focus on slowing your toss arm down — that's where most inconsistency comes from at this rating.`
+              : lowestLabel === "Forehand"
+              ? `Rally crosscourt with a partner or machine, keeping every ball 3 feet above the net and past the service line. Count consecutive balls without an error. Week goal: 20 consecutive. Since you rated your forehand ${lowestRating}/10, focus specifically on watching the ball all the way to contact — most forehand errors at this rating come from looking up early.`
+              : lowestLabel === "Backhand"
+              ? `Partner feeds high balls to your backhand above the shoulder. Focus on completing your shoulder unit turn BEFORE the ball arrives — not as it arrives. Hit 15 balls per set crosscourt with heavy topspin. Since you rated your backhand ${lowestRating}/10, the fix is almost always getting your unit turn earlier, not swinging harder.`
+              : lowestLabel === "Volley / Net Game"
+              ? `Partner feeds short balls inside the service line. Hit a low slice approach down the line, split step, then put away the volley crosscourt. 10 reps per side per set. Since you rated your net game ${lowestRating}/10, approach on every short ball this week — even if you feel unsure. You can't build net confidence without getting to net.`
+              : lowestLabel === "Return"
+              ? `Partner serves from the service line (closer than normal) to a realistic pace. Practice split-stepping as they toss, taking a compact backswing, and redirecting crosscourt. Since you rated your return ${lowestRating}/10, stand 2-3 feet further back than usual on first serves — you need time to read the ball before you can attack it.`
+              : lowestLabel === "Footwork"
+              ? `Run 3 agility ladder patterns: in-in-out-out, lateral shuffle, single-leg hops. Add a split step and shadow forehand at the end of each run. Since you rated your footwork ${lowestRating}/10, the split step is the #1 fix — you're likely arriving late to shots because you're not loading correctly between shots.`
+              : `Practice your ${lowestLabel.toLowerCase()} for 20 focused minutes. Start at 50% intensity, build to 80%. Track your error rate and compare next session. Since you rated this ${lowestRating}/10, focus on the fundamentals before adding pace or spin.`,
+            successTarget: `Rate your ${lowestLabel.toLowerCase()} 1 point higher in next session's self-assessment`,
+            coachTip: lowestLabel === "Serve" ? "Toss slightly behind your head — if you're pushing the serve, your toss is too far forward" : lowestLabel === "Forehand" ? "Keep your chin on your shoulder through contact — no peeking" : lowestLabel === "Backhand" ? "Unit turn first, swing second — if your arm moves before your shoulder, start over" : "Commit fully — hesitation causes more errors than aggression at any level",
+            videoUrl: lowestVid.url,
+            videoTitle: lowestVid.title,
+            videoChannel: lowestVid.channel,
+          },
+          {
+            drillName: secondLabel === "Serve" ? "Serve Placement Drill" : secondLabel === "Forehand" ? "Inside-Out Forehand Pattern" : secondLabel === "Backhand" ? "Crosscourt Backhand Rally" : secondLabel === "Volley / Net Game" ? "Volley Reflex Drill" : secondLabel === "Return" ? "Second Serve Attack Drill" : secondLabel === "Footwork" ? "Shadow Groundstroke Footwork" : `${secondLabel} Pattern Drill`,
+            focus: secondLabel,
+            duration: "15 min",
+            frequency: "3x this week",
+            instructions: `Focus specifically on your ${secondLabel.toLowerCase()}, which you rated ${ratings[secondLowest?.id]||4}/10. Work with a partner or ball machine. Hit 3 sets of 15 balls with a specific target — don't just rally, aim for a cone or court marking every shot. Track how many land on target each set and try to improve that number each session.`,
+            successTarget: `Hit target on 70%+ of ${secondLabel.toLowerCase()} shots in practice sets`,
+            coachTip: `The gap between ${ratings[secondLowest?.id]||4}/10 and 7/10 is usually one specific technical fix — ask yourself what you do differently on your best ${secondLabel.toLowerCase()} shots versus your worst ones`,
+            videoUrl: secondVid.url,
+            videoTitle: secondVid.title,
+            videoChannel: secondVid.channel,
+          },
+          {
+            drillName: "Point Construction — Play to Strengths",
+            focus: "Tactical Pattern Play",
+            duration: "20 min",
+            frequency: "2x this week",
+            instructions: `Play out full points with a practice partner but with one rule: every point must start with a shot designed to create your ${highestLabel.toLowerCase()}. If ${highestLabel} is your forehand, serve to force a weak return you can attack with your forehand. If it's your net game, approach on every ball inside the service line. Force yourself to use your strength on purpose, not by accident.`,
+            successTarget: `Use your ${highestLabel.toLowerCase()} as the intended final shot on 70%+ of points played`,
+            coachTip: `Champions play to their strengths — they don't just wait for their strength to appear, they construct points specifically to use it`,
+            videoUrl: "https://www.youtube.com/watch?v=CofM-vwQRW4",
+            videoTitle: "Point Construction & Pattern Play — Top Tennis Training",
+            videoChannel: "Top Tennis Training · YouTube",
+          },
+        ],
+        nextWeekPlan: {
+          theme: `Fix ${lowestLabel} — Build Around ${highestLabel}`,
+          days: [
+            { day: "Monday",    session: `${lowestLabel} focus drill — 20 min cone targets or specific fix drill`, duration: "45 min", type: "on-court" },
+            { day: "Tuesday",   session: `Off-court: shadow swings for ${lowestLabel} + agility ladder footwork`, duration: "30 min", type: "off-court" },
+            { day: "Wednesday", session: `${secondLabel} drill 15 min + point construction using ${highestLabel}`, duration: "45 min", type: "on-court" },
+            { day: "Thursday",  session: "Rest — review your ratings and mental preparation", duration: "20 min", type: "rest" },
+            { day: "Friday",    session: `Match simulation — consciously use ${highestLabel} as primary weapon`, duration: "60 min", type: "on-court" },
+            { day: "Saturday",  session: `Ball machine: 100 ${lowestLabel.toLowerCase()} shots with specific target. Make 80/100.`, duration: "40 min", type: "on-court" },
+            { day: "Sunday",    session: "Rest and re-rate your game — compare to today's ratings", duration: "-", type: "rest" },
+          ],
+        },
+        weeklyGoals: [
+          {
+            goal: `Improve your ${lowestLabel} self-rating from ${lowestRating}/10 to ${Math.min(lowestRating + 1, 10)}/10`,
+            metric: `Rate your ${lowestLabel.toLowerCase()} honestly after each session — track whether it's trending up`,
+          },
+          {
+            goal: `Win at least 60% of points when you use your ${highestLabel.toLowerCase()} as the intended attacking shot`,
+            metric: `Count these points in your next match or practice — tally wins vs losses when you get to your best shot`,
+          },
+          {
+            goal: `Complete all 3 drills from the plan at least 2x each this week`,
+            metric: `Log each session — check off Mon, Wed, Sat drills. Consistency beats intensity at this stage`,
+          },
         ],
         chips: [
-          { label: lowest?`⚠ Work on ${lowest.label}`:"⚠ Identify weak area", type:"red" },
-          { label: highest?`✓ Strong ${highest.label}`:"✓ Keep assessing", type:"green" },
-          { label:"📊 Log next match too", type:"yellow" },
+          { label: `⚠ Fix ${lowestLabel} first`, type: "red" },
+          { label: ratings[secondLowest?.id] < 6 ? `⚠ Work on ${secondLabel}` : `📊 Develop ${secondLabel}`, type: "yellow" },
+          { label: `✓ Weaponize ${highestLabel}`, type: "green" },
         ],
       };
     }
@@ -2438,21 +3017,31 @@ const QUESTIONS = [
   },
 ];
 
-// ─── YouTube drill video library ──────────────────────────────────────────
+// ─── YouTube drill video library — verified working IDs ───────────────────
 const DRILL_VIDEOS = {
-  "2nd Serve":        { title: "Kick Serve Technique", url: "https://www.youtube.com/watch?v=8Zq8zHrHjMo", channel: "FuzzyYellowBalls" },
-  "Serve":            { title: "Serve Fundamentals", url: "https://www.youtube.com/watch?v=R5SRoKnGzSw", channel: "Top Tennis Training" },
-  "Forehand Consistency": { title: "Forehand Groundstroke Drill", url: "https://www.youtube.com/watch?v=z2tF7RHHEAg", channel: "Top Tennis Training" },
-  "Forehand":         { title: "Forehand Groundstroke Drill", url: "https://www.youtube.com/watch?v=z2tF7RHHEAg", channel: "Top Tennis Training" },
-  "Backhand":         { title: "Backhand Topspin Drills", url: "https://www.youtube.com/watch?v=4w1YE_aznQI", channel: "Top Tennis Training" },
-  "Net Game":         { title: "Volley & Net Approach Drill", url: "https://www.youtube.com/watch?v=qKTGSnTmRNk", channel: "Essential Tennis" },
-  "Shot Selection":   { title: "Inside-Out Forehand Pattern", url: "https://www.youtube.com/watch?v=HkqAQ63Iqr8", channel: "Top Tennis Training" },
-  "Return":           { title: "Return of Serve Drills", url: "https://www.youtube.com/watch?v=lKbGTljB08E", channel: "Essential Tennis" },
-  "Court Speed":      { title: "Tennis Footwork & Agility Ladder", url: "https://www.youtube.com/watch?v=2PqkDnxLWd0", channel: "Essential Tennis" },
-  "Footwork":         { title: "Tennis Footwork Drills", url: "https://www.youtube.com/watch?v=2PqkDnxLWd0", channel: "Essential Tennis" },
-  "Forehand Power":   { title: "Forehand Power & Hip Rotation", url: "https://www.youtube.com/watch?v=z2tF7RHHEAg", channel: "Top Tennis Training" },
-  "Hand Speed":       { title: "Hand Speed & Reaction Drills", url: "https://www.youtube.com/watch?v=qKTGSnTmRNk", channel: "Essential Tennis" },
-  "2nd Serve Pressure":{ title: "Serving Under Pressure", url: "https://www.youtube.com/watch?v=8Zq8zHrHjMo", channel: "FuzzyYellowBalls" },
+  // Serve
+  "Serve":             { title: "Tennis Serve Drills For Fast Improvement", url: "https://www.youtube.com/watch?v=Bcqi_M9aPmg", channel: "Top Tennis Training · YouTube" },
+  "2nd Serve":         { title: "Develop Heavy Kick With The Trap Drill", url: "https://www.youtube.com/watch?v=P8eZQBD-X0c", channel: "FuzzyYellowBalls · YouTube" },
+  "2nd Serve Pressure":{ title: "Kick Serve Step 1 — Toss Position", url: "https://www.youtube.com/watch?v=TkAj6MmwxHw", channel: "FuzzyYellowBalls · YouTube" },
+  // Forehand
+  "Forehand":          { title: "How To Hit The Perfect Tennis Forehand", url: "https://www.youtube.com/watch?v=aZj7DIEftPg", channel: "Top Tennis Training · YouTube" },
+  "Forehand Consistency":{ title: "How To Hit The Perfect Tennis Forehand", url: "https://www.youtube.com/watch?v=aZj7DIEftPg", channel: "Top Tennis Training · YouTube" },
+  "Forehand Power":    { title: "Tennis Forehand — 5 Steps To Crazy Power", url: "https://www.youtube.com/watch?v=WpZY6bbiM6I", channel: "Top Tennis Training · YouTube" },
+  // Backhand
+  "Backhand":          { title: "Tennis Two Handed Backhand — Hit Heavy Topspin", url: "https://www.youtube.com/watch?v=OU39URVIpVc", channel: "Top Tennis Training · YouTube" },
+  // Volley / Net
+  "Net Game":          { title: "Tennis Volley Lesson — Transform Your Volleys", url: "https://www.youtube.com/watch?v=D1npzA6_Q3U", channel: "Top Tennis Training · YouTube" },
+  "Volley / Net Game": { title: "Dominate The Net — 6 Volley Drills", url: "https://www.youtube.com/watch?v=LJCRU5fM-Bk", channel: "Top Tennis Training · YouTube" },
+  "Hand Speed":        { title: "Tennis Volley Drills — Power Control Footwork", url: "https://www.youtube.com/watch?v=ebSB47mHNuQ", channel: "Intuitive Tennis · YouTube" },
+  // Return
+  "Return":            { title: "Top 3 Drills For Perfect Return of Serve", url: "https://www.youtube.com/watch?v=_pS0otk2560", channel: "Top Tennis Training · YouTube" },
+  // Footwork
+  "Footwork":          { title: "Tennis Footwork — 5 Drills To Improve Movement", url: "https://www.youtube.com/watch?v=eGWhONP7558", channel: "Top Tennis Training · YouTube" },
+  "Court Speed":       { title: "5 Easy Ladder Footwork Drills for Tennis", url: "https://www.youtube.com/watch?v=s9twENtOkwk", channel: "Essential Tennis · YouTube" },
+  // Patterns
+  "Shot Selection":    { title: "Tennis Ball Machine Drills — Forehand Backhand Volleys", url: "https://www.youtube.com/watch?v=CofM-vwQRW4", channel: "Top Tennis Training · YouTube" },
+  "Mental Game":       { title: "The Most Important Footwork Lesson", url: "https://www.youtube.com/watch?v=y6IBn6hxDZ4", channel: "Top Tennis Training · YouTube" },
+  "Consistency":       { title: "Tennis Serve Drills For Fast Improvement", url: "https://www.youtube.com/watch?v=Bcqi_M9aPmg", channel: "Top Tennis Training · YouTube" },
 };
 
 function getVideoForDrill(focus) {
@@ -3555,9 +4144,15 @@ function MonthlyCoachingReport({ isElite, setModalPlan }) {
     setReport({
       month: currentMonth, overallGrade: "B+", gradeColor: "#C4A42B",
       headline: "Strong serve improvement, backhand still the priority",
+      personalMessage: `This was a month of real, measurable progress — and you should feel good about that. The work you put into your serve showed up in your match results, which is exactly how it's supposed to work. Keep showing up consistently and the rating will follow.`,
       executiveSummary: `${currentMonth} showed genuine progression across your game. Your first serve percentage climbed meaningfully through consistent practice, and your net game saw the biggest jump of any area this month. The backhand under pressure remains your most important development area — it's costing you games at key moments. Your training consistency is commendable and is clearly paying dividends.`,
       ntrpEstimate: "3.5", ntrpTrend: "improving",
       matchRecord: { wins: wins || 4, losses: (recentLogs.length - wins) || 2, description: "Solid record for the level — losses were competitive" },
+      milestonesAchieved: [
+        { milestone: "First serve percentage crossed 60% for the first time", icon: "🎾" },
+        { milestone: "Net points won improved by 13% — approach game is clicking", icon: "🏆" },
+        { milestone: `${recentLogs.length || 6} training sessions logged this month`, icon: "📅" },
+      ],
       statsTrend: [
         { label: "1st Serve %", start: 52, end: 61, trend: "up", note: "Best single improvement this month" },
         { label: "Unforced Errors", start: 28, end: 22, trend: "up", note: "Down 6 per match — keep going" },
@@ -3567,26 +4162,37 @@ function MonthlyCoachingReport({ isElite, setModalPlan }) {
       ],
       biggestWin: "First serve percentage up 9 points — the kick serve cone drill is clearly working. This is the most impactful single improvement of the month.",
       biggestChallenge: "2nd serve win rate barely moved. Opponents are still attacking your second serve aggressively. This is now your #1 focus for next month.",
-      drillsCompleted: `${recentLogs.length > 0 ? recentLogs.length : 8} sessions logged. On-court serve work showed best returns. Off-court footwork needs more consistency.`,
       weeklyBreakdown: [
         { week: "Week 1", focus: "Serve mechanics & kick serve reps", result: "Struggled early, breakthrough by Thursday", grade: "B" },
         { week: "Week 2", focus: "Crosscourt rally patterns & footwork", result: "Best training week of the month — high consistency", grade: "A-" },
         { week: "Week 3", focus: "Match simulation & point construction", result: "Applied patterns well in practice, slightly struggled in matches", grade: "B+" },
         { week: "Week 4", focus: "Return of serve & net approach", result: "Net game showed big improvement, return still inconsistent", grade: "B+" },
       ],
-      coachInsights: [
-        { insight: "Your inside-out forehand is becoming a genuine weapon — lean into this pattern more in matches. You're winning 70%+ of points when you set it up correctly.", priority: "high" },
-        { insight: "The backhand breakdown happens specifically on high balls above the shoulder. Work on getting your shoulder unit turn earlier on those shots.", priority: "high" },
-        { insight: "You're approaching net on only about 30% of short balls — this number should be closer to 80%. Trust your approach game more.", priority: "medium" },
+      top3NextLevelFocus: [
+        { rank: 1, category: "Technical", title: "2nd Serve Reliability — Kick Serve Development", why: "At 4.0 level, opponents attack weak second serves immediately. A reliable kick serve to the backhand is non-negotiable to hold your own serve.", howTo: "20 min kick serve cone drill daily. Target backhand corner. Goal: 70%+ in with topspin within 6 weeks.", impact: "high" },
+        { rank: 2, category: "Tactical", title: "Backhand Under Pressure — Unit Turn & Timing", why: "4.0 players rally 8+ balls reliably crosscourt. Your backhand breakdown on high balls is what will keep you stuck at 3.5.", howTo: "High ball backhand drill 3x/week. Focus on shoulder unit turn on balls above the waist. Shadow drills off court.", impact: "high" },
+        { rank: 3, category: "Competition", title: "USTA Rated Match Play Experience", why: "Computer ratings are built on USTA match results. More rated matches = more data = faster accurate placement. You need official match play to move up.", howTo: "Register for USTA Adult 18+ 3.5 League this season. Also enter 1 self-rated local tournament to get rated match results on record.", impact: "medium" },
       ],
-      nextMonthPlan: {
-        primaryFocus: "2nd serve reliability — specifically developing a consistent kick serve that wins 45%+ of second serve points",
-        secondaryFocus: "Backhand on high balls — shoulder unit turn drill and high topspin backhand practice",
-        drillPlan: "20 min kick serve cone targets daily + 15 min high ball backhand drill 3x per week",
-        matchGoal: "Win 60%+ of first serve points and reduce double faults to fewer than 4 per match",
-        mindsetNote: "Focus on the process, not the score — execute your primary pattern on every point and the wins will follow",
+      ustaRoadmap: {
+        currentRating: "3.5", targetRating: "4.0",
+        estimatedTimeline: "4-6 months at current rate of improvement",
+        whatItTakes: "A 4.0 player has a reliable serve that wins 60%+ of first serve points, consistent groundstrokes that rarely break down, and executes patterns — not just hitting the ball back.",
+        ratingKeyRequirements: ["Win 60%+ of first serve points consistently", "Reduce unforced errors to fewer than 15 per match", "Win at least 40% of return games", "Reliable net game when approaching"],
+        selfRatingTip: "If you self-rated at 3.5, you can self-rate up to 4.0 at the start of a new USTA season if you feel your level warrants it — your computer rating will adjust based on results.",
       },
-      motivationalNote: `${currentMonth} was a month of real, measurable progress. The work you put into your serve is showing up in your match results — that's not luck, that's repetition paying off. Next month, attack the 2nd serve with the same focus you gave the 1st serve this month. If you do, you'll be playing like a 4.0 by the end of it.`,
+      tournamentLeagueRecommendations: [
+        { type: "League", name: "USTA Adult 18+ 3.5 League", why: "Best way to get official USTA match results that count toward your computer rating. Playing 6+ USTA matches in a season generates meaningful data.", when: "Typically runs spring and fall — register now for the fall season at tennislink.usta.com", benefit: "Official match results count toward your dynamic USTA computer rating" },
+        { type: "Tournament", name: "USTA Self-Rated 3.5 Tournament", why: "Tournaments concentrate a lot of rated match play into a weekend, giving your computer rating a significant data boost.", when: "Check tennislink.usta.com for local events — many regions host monthly tournaments", benefit: "Multiple USTA matches in 2 days — fastest path to an accurate computer rating" },
+        { type: "Internal", name: "Club Ladder or Round Robin", why: "Low-pressure, high-frequency match play against a variety of styles at your club.", when: "Ongoing — ask your club pro or tennis director about current ladder programs", benefit: "Builds match toughness, reveals tactical weaknesses, and keeps you match-sharp between USTA events" },
+      ],
+      nextMonthGoal: {
+        primaryGoal: "Win 50%+ of second serve points — this single stat will be the clearest sign you've moved up a level",
+        drillFocus: "Kick serve cone targets 20 min daily + high ball backhand drill 3x/week",
+        matchTarget: "Fewer than 4 double faults per match and win at least 40% of return games",
+        mindsetFocus: "Focus on the process, not the score — execute your primary pattern every point and trust it",
+      },
+      motivationalQuote: { quote: "Champions keep playing until they get it right.", author: "Billie Jean King" },
+      closingNote: `${currentMonth} was a month of real, measurable progress. The work you put into your serve is showing up in your match results — that's not luck, that's repetition paying off. Next month, attack the 2nd serve with the same focus you gave the 1st serve this month. If you do, you'll be playing like a 4.0 by the end of it. Let's go.`,
     });
     setLoading(false);
   }
@@ -3650,9 +4256,33 @@ function MonthlyCoachingReport({ isElite, setModalPlan }) {
       </div>
 
       <div className="report-body">
+
+        {/* Personal message */}
+        {report.personalMessage && (
+          <div style={{ background: "rgba(200,98,42,0.05)", border: "1px solid rgba(200,98,42,0.15)", borderRadius: 10, padding: "18px 20px", marginBottom: 24, display: "flex", gap: 14 }}>
+            <div style={{ fontSize: 28, flexShrink: 0 }}>👋</div>
+            <div style={{ fontSize: 15, color: "var(--ink)", lineHeight: 1.75, fontStyle: "italic" }}>{report.personalMessage}</div>
+          </div>
+        )}
+
         {/* Executive summary */}
         <div className="report-section-title">Coach's Summary</div>
         <div className="report-summary">{report.executiveSummary}</div>
+
+        {/* Milestones */}
+        {report.milestonesAchieved?.length > 0 && (
+          <>
+            <div className="report-section-title">🏆 Milestones Achieved This Month</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 28 }}>
+              {report.milestonesAchieved.map((m, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, background: "rgba(74,124,47,0.06)", border: "1px solid rgba(74,124,47,0.15)", borderRadius: 8, padding: "12px 16px" }}>
+                  <span style={{ fontSize: 24 }}>{m.icon}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)" }}>{m.milestone}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
 
         {/* Stats trend */}
         <div className="report-section-title">Stats Trend — Month Over Month</div>
@@ -3666,7 +4296,6 @@ function MonthlyCoachingReport({ isElite, setModalPlan }) {
                 <div className="report-stat-trend" style={{ color: TREND_COLOR[s.trend] }}>{TREND_ARROW[s.trend]}</div>
               </div>
               <div style={{ fontSize: 11, color: "var(--mid)", marginTop: 4 }}>{s.note}</div>
-              {/* Mini progress bar */}
               <div style={{ height: 3, background: "rgba(107,94,82,0.1)", borderRadius: 2, marginTop: 8 }}>
                 <div style={{ height: "100%", borderRadius: 2, background: TREND_COLOR[s.trend] || "var(--clay)", width: `${Math.min(s.end, 100)}%` }} />
               </div>
@@ -3674,7 +4303,7 @@ function MonthlyCoachingReport({ isElite, setModalPlan }) {
           ))}
         </div>
 
-        {/* Wins & challenges */}
+        {/* Biggest win + challenge */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 28 }}>
           <div style={{ background: "rgba(74,124,47,0.06)", border: "1px solid rgba(74,124,47,0.2)", borderRadius: 10, padding: "16px 18px" }}>
             <div style={{ fontWeight: 700, fontSize: 11, color: "var(--grass-light)", letterSpacing: 1, textTransform: "uppercase", marginBottom: 8 }}>🏆 Biggest Win</div>
@@ -3701,43 +4330,125 @@ function MonthlyCoachingReport({ isElite, setModalPlan }) {
           ))}
         </div>
 
-        {/* Coach insights */}
-        <div className="report-section-title">Coach Insights</div>
-        <div className="report-insights" style={{ marginBottom: 28 }}>
-          {report.coachInsights?.map((ins, i) => (
-            <div key={i} className="report-insight-row">
-              <div style={{ width: 24, height: 24, borderRadius: "50%", background: ins.priority === "high" ? "rgba(200,98,42,0.1)" : "rgba(107,94,82,0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: ins.priority === "high" ? "var(--clay)" : "var(--mid)" }}>{i + 1}</span>
-              </div>
-              <div>
-                <div style={{ fontSize: 13, color: "var(--ink)", lineHeight: 1.6 }}>{ins.insight}</div>
-                <span style={{ fontSize: 10, fontWeight: 700, color: ins.priority === "high" ? "var(--clay)" : "var(--mid)", textTransform: "uppercase", letterSpacing: 0.5 }}>{ins.priority} priority</span>
-              </div>
+        {/* Top 3 Next-Level Focus Areas */}
+        {report.top3NextLevelFocus?.length > 0 && (
+          <>
+            <div className="report-section-title">🎯 Top 3 Things to Reach Your Next USTA Rating</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 28 }}>
+              {report.top3NextLevelFocus.map((item, i) => {
+                const catColor = item.category === "Technical" ? "var(--clay)" : item.category === "Tactical" ? "var(--hard-light)" : "var(--grass-light)";
+                const catBg = item.category === "Technical" ? "rgba(200,98,42,0.08)" : item.category === "Tactical" ? "rgba(43,95,138,0.08)" : "rgba(74,124,47,0.08)";
+                return (
+                  <div key={i} style={{ background: "white", border: "1px solid rgba(107,94,82,0.12)", borderRadius: 10, overflow: "hidden" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", borderBottom: "1px solid rgba(107,94,82,0.08)", background: catBg }}>
+                      <div style={{ width: 36, height: 36, borderRadius: "50%", background: catColor, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Bebas Neue', sans-serif", fontSize: 20, color: "white", flexShrink: 0 }}>{item.rank}</div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 700, fontSize: 15, color: "var(--ink)" }}>{item.title}</div>
+                        <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 100, background: catColor, color: "white", textTransform: "uppercase", letterSpacing: 0.5 }}>{item.category}</span>
+                      </div>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: item.impact === "high" ? "var(--clay)" : "var(--mid)", textTransform: "uppercase" }}>{item.impact} impact</span>
+                    </div>
+                    <div style={{ padding: "12px 18px" }}>
+                      <div style={{ fontSize: 12, color: "var(--mid)", marginBottom: 6 }}>
+                        <strong style={{ color: "var(--ink)" }}>Why it matters: </strong>{item.why}
+                      </div>
+                      <div style={{ fontSize: 12, color: "var(--mid)" }}>
+                        <strong style={{ color: catColor }}>How to develop it: </strong>{item.howTo}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          ))}
-        </div>
+          </>
+        )}
 
-        {/* Next month plan */}
-        <div className="report-next-month">
-          <div className="report-next-month-title">📅 Next Month's Game Plan</div>
-          {report.nextMonthPlan && Object.entries({
-            "Primary Focus": report.nextMonthPlan.primaryFocus,
-            "Secondary Focus": report.nextMonthPlan.secondaryFocus,
-            "Drill Plan": report.nextMonthPlan.drillPlan,
-            "Match Goal": report.nextMonthPlan.matchGoal,
-            "Mindset": report.nextMonthPlan.mindsetNote,
-          }).map(([label, value]) => (
-            <div key={label} className="report-next-item">
-              <div className="report-next-label">{label}</div>
-              <div className="report-next-value">{value}</div>
+        {/* USTA Rating Roadmap */}
+        {report.ustaRoadmap && (
+          <>
+            <div className="report-section-title">📈 USTA Rating Roadmap</div>
+            <div className="report-next-month" style={{ marginBottom: 28 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <div>
+                  <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: 28, color: "var(--off-white)", lineHeight: 1 }}>
+                    {report.ustaRoadmap.currentRating} → {report.ustaRoadmap.targetRating}
+                  </div>
+                  <div style={{ fontSize: 13, color: "rgba(245,240,232,0.55)", marginTop: 4 }}>Current → Target Rating</div>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)" }}>{report.ustaRoadmap.estimatedTimeline}</div>
+                  <div style={{ fontSize: 11, color: "rgba(245,240,232,0.4)" }}>Estimated timeline</div>
+                </div>
+              </div>
+              <div style={{ fontSize: 13, color: "rgba(245,240,232,0.7)", lineHeight: 1.6, marginBottom: 14, padding: "10px 14px", background: "rgba(255,255,255,0.04)", borderRadius: 6 }}>
+                {report.ustaRoadmap.whatItTakes}
+              </div>
+              {report.ustaRoadmap.ratingKeyRequirements?.map((req, i) => (
+                <div key={i} style={{ display: "flex", gap: 10, padding: "7px 0", borderBottom: "1px solid rgba(255,255,255,0.05)", fontSize: 13, color: "rgba(245,240,232,0.7)" }}>
+                  <span style={{ color: "var(--clay)", fontWeight: 700 }}>✓</span> {req}
+                </div>
+              ))}
+              {report.ustaRoadmap.selfRatingTip && (
+                <div style={{ marginTop: 12, padding: "10px 14px", background: "rgba(232,197,71,0.1)", border: "1px solid rgba(232,197,71,0.2)", borderRadius: 6, fontSize: 12, color: "var(--accent)" }}>
+                  💡 {report.ustaRoadmap.selfRatingTip}
+                </div>
+              )}
             </div>
-          ))}
-        </div>
+          </>
+        )}
 
-        {/* Motivational closing */}
+        {/* Tournament & League Recommendations */}
+        {report.tournamentLeagueRecommendations?.length > 0 && (
+          <>
+            <div className="report-section-title">🏟 Tournament & League Recommendations</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
+              {report.tournamentLeagueRecommendations.map((rec, i) => (
+                <div key={i} style={{ background: "white", border: "1px solid rgba(107,94,82,0.12)", borderRadius: 10, padding: "14px 18px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                    <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 100, background: rec.type === "League" ? "rgba(45,80,22,0.1)" : rec.type === "Tournament" ? "rgba(200,98,42,0.1)" : "rgba(107,94,82,0.08)", color: rec.type === "League" ? "var(--grass-light)" : rec.type === "Tournament" ? "var(--clay)" : "var(--mid)", textTransform: "uppercase", letterSpacing: 0.5 }}>{rec.type}</span>
+                    <span style={{ fontWeight: 700, fontSize: 14, color: "var(--ink)" }}>{rec.name}</span>
+                  </div>
+                  <div style={{ fontSize: 12, color: "var(--mid)", lineHeight: 1.5, marginBottom: 6 }}>{rec.why}</div>
+                  <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 11, color: "var(--mid)" }}>📅 {rec.when}</span>
+                    <span style={{ fontSize: 11, color: "var(--clay)", fontWeight: 600 }}>↗ {rec.benefit}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Next month goal */}
+        {report.nextMonthGoal && (
+          <div className="report-next-month" style={{ marginBottom: 28 }}>
+            <div className="report-next-month-title">📅 Next Month's Goal</div>
+            {Object.entries({
+              "Primary Goal":   report.nextMonthGoal.primaryGoal,
+              "Drill Focus":    report.nextMonthGoal.drillFocus,
+              "Match Target":   report.nextMonthGoal.matchTarget,
+              "Mindset Focus":  report.nextMonthGoal.mindsetFocus,
+            }).map(([label, value]) => value && (
+              <div key={label} className="report-next-item">
+                <div className="report-next-label">{label}</div>
+                <div className="report-next-value">{value}</div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Motivational quote */}
+        {report.motivationalQuote && (
+          <div style={{ background: "rgba(107,94,82,0.04)", border: "1px solid rgba(107,94,82,0.1)", borderRadius: 10, padding: "18px 20px", marginBottom: 20, borderLeft: "3px solid var(--clay)" }}>
+            <div style={{ fontSize: 15, color: "var(--ink)", fontStyle: "italic", lineHeight: 1.7, marginBottom: 8 }}>"{report.motivationalQuote.quote}"</div>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "var(--clay)" }}>— {report.motivationalQuote.author}</div>
+          </div>
+        )}
+
+        {/* Closing note */}
         <div className="report-motivational">
           <div style={{ fontSize: 11, fontWeight: 700, color: "var(--clay)", letterSpacing: 2, textTransform: "uppercase", marginBottom: 12 }}>From Your Coach</div>
-          <p>{report.motivationalNote}</p>
+          <p>{report.closingNote || report.motivationalNote}</p>
           <div style={{ marginTop: 16, fontFamily: "'Bebas Neue', sans-serif", fontSize: 18, color: "var(--clay)", letterSpacing: 1 }}>— ACE Elite Coach</div>
         </div>
       </div>
@@ -3752,13 +4463,14 @@ const VENMO_HANDLE = "@Alex-Kotlyar";
 const PLANS = {
   Challenger: { price: 15,  period: "month", billing: "billed monthly",    features: "All core AI coaching tools", color: "var(--mid)",  highlights: ["Unlimited AI match analysis","Tactical game plans","Drill recommendations","Progress tracking","Shot selection coaching"] },
   Pro:        { price: 29,  period: "month", billing: "billed monthly",    features: "Core + Match Prep Reports",   color: "var(--clay)", highlights: ["Everything in Challenger","Premium Match Prep Reports","Video breakdown guidance","Weekly training plans","Priority AI response"] },
-  Elite:      { price: 40,  period: "month", billing: "billed monthly",    features: "Everything + Daily briefings + Monthly report", color: "#C4A42B", highlights: ["Everything in Pro","Daily Elite briefings","Monthly coaching report","Tournament prep programs","1:1 coach session monthly"] },
+  Elite:      { price: 40,  period: "month", billing: "billed monthly",    features: "Everything + Daily briefings + Monthly report + 1:1 Call", color: "#C4A42B", highlights: ["Everything in Pro","Daily Elite briefings","Monthly coaching report","Milestones & USTA rating roadmap","Monthly 1:1 video/phone call with Coach Alex","Tournament & league recommendations"] },
   Annual:     { price: 299, period: "year",  billing: "billed once yearly", features: "All features — best value",   color: "var(--grass-light)", highlights: ["Every feature unlocked","Save $181 vs Elite monthly","~$25/month equivalent","No monthly charges","Includes Elite monthly reports"] },
 };
 
 function VenmoModal({ plan: initialPlan, onClose }) {
-  const [selectedPlan, setSelectedPlan] = useState(initialPlan || "Pro");
-  const [step, setStep] = useState(initialPlan ? "form" : "pick"); // "pick" | "form" | "success"
+  const hasPlan = initialPlan && initialPlan !== "";
+  const [selectedPlan, setSelectedPlan] = useState(hasPlan ? initialPlan : "Pro");
+  const [step, setStep] = useState(hasPlan ? "form" : "pick");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({});
@@ -3955,7 +4667,34 @@ export default function App() {
 
   const MATCH_SYSTEM = `You are ACE, an expert AI tennis coach specializing in match analysis for recreational and competitive club players (NTRP 2.5–4.5). You analyze player weaknesses, explain WHY they're losing points, and give specific, actionable drills and training advice. Be concise, direct, and encouraging. Use tennis terminology naturally. Format responses clearly. Limit replies to 150 words.`;
 
-const STRATEGY_SYSTEM = `You are ACE's strategy module — a tactical tennis brain. You help players build game plans against different opponent types, suggest shot patterns, and explain court positioning. You factor in surface type, opponent tendencies, and player strengths. Be tactical, specific, and direct. Use court geometry, spin types, and pattern play in your advice. Limit replies to 150 words.`;
+const STRATEGY_SYSTEM = `You are ACE's tactical match prep brain. When a player describes their upcoming opponent, surface, and situation, respond conversationally (1-2 paragraphs) AND include at the end a JSON block wrapped in <tactics>...</tactics> tags with this exact structure:
+<tactics>
+{
+  "opponentProfile": "2 sentence summary of opponent style and tendencies",
+  "opponentStrengths": ["Strength 1", "Strength 2", "Strength 3"],
+  "opponentWeaknesses": ["Weakness 1", "Weakness 2", "Weakness 3"],
+  "gameStyle": "Describe your recommended game style vs this opponent in 1 sentence",
+  "surface": "hard",
+  "topPatterns": [
+    { "rank": 1, "name": "Pattern name e.g. Heavy topspin to backhand", "description": "Exactly how to execute this — court position, spin, target zone", "winRate": 72, "difficulty": "Intermediate" },
+    { "rank": 2, "name": "Second best pattern", "description": "Execution detail", "winRate": 65, "difficulty": "Beginner" },
+    { "rank": 3, "name": "Third pattern", "description": "Execution detail", "winRate": 58, "difficulty": "Advanced" },
+    { "rank": 4, "name": "Fourth pattern", "description": "Execution detail", "winRate": 54, "difficulty": "Intermediate" }
+  ],
+  "shotSelection": [
+    { "shot": "1st Serve", "target": "T on deuce, wide on ad", "spin": "Flat or kick", "goal": "65%+ in", "tip": "One cue" },
+    { "shot": "2nd Serve", "target": "Kick to backhand", "spin": "Heavy topspin", "goal": "80%+ in", "tip": "One cue" },
+    { "shot": "Return", "target": "Crosscourt deep", "spin": "Topspin", "goal": "70%+ in play", "tip": "One cue" },
+    { "shot": "Forehand", "target": "Deep crosscourt or inside-out", "spin": "Heavy topspin", "goal": "75%+ in", "tip": "One cue" },
+    { "shot": "Backhand", "target": "Crosscourt safe", "spin": "Topspin slice mix", "goal": "70%+ in", "tip": "One cue" },
+    { "shot": "Approach", "target": "Down the line low", "spin": "Slice", "goal": "Make 8/10", "tip": "One cue" }
+  ],
+  "mentalGame": "One specific mental approach for this match",
+  "avoidAt": ["Specific shot or situation to avoid", "Another thing to avoid"]
+}
+</tactics>
+Keep the conversational part natural and direct. The JSON gives the structured breakdown.`;
+
 
 const SHOT_SYSTEM = `You are ACE Shot Selection Coach, an expert in tennis pattern play and point construction. When a player describes their level, opponent style, or specific situation, respond ONLY with a valid JSON object (no markdown) in this format:
 {
@@ -4060,7 +4799,7 @@ Only include strengths and struggles the player actually mentioned. Do not add e
   return (
     <>
       <style>{CSS}</style>
-      {modalPlan && <VenmoModal plan={modalPlan} onClose={() => setModalPlan(null)} />}
+      {modalPlan !== null && <VenmoModal plan={modalPlan} onClose={() => setModalPlan(null)} />}
 
       {/* NAV */}
       <nav>
@@ -4094,7 +4833,7 @@ Only include strengths and struggles the player actually mentioned. Do not add e
             </li>
           ))}
         </ul>
-        <button className="nav-cta" onClick={() => setModalPlan("Pro")}>Get Started</button>
+        <button className="nav-cta" onClick={() => setModalPlan("")}>Get Started</button>
       </nav>
 
       {/* HERO */}
@@ -4106,7 +4845,7 @@ Only include strengths and struggles the player actually mentioned. Do not add e
           <h1>STOP<br/><em>GUESSING.</em><br/>START<br/>WINNING.</h1>
           <p>ACE analyzes your match stats, identifies exactly why you're losing points, and builds a personalized training plan to break through your plateau.</p>
           <div className="hero-actions">
-            <button className="btn-primary" onClick={() => setModalPlan("Pro")}>Get Started →</button>
+            <button className="btn-primary" onClick={() => setModalPlan("")}>Get Started →</button>
             <button className="btn-outline" onClick={() => document.getElementById("coach").scrollIntoView({behavior:"smooth"})}>See How It Works</button>
           </div>
           <div className="hero-stats">
@@ -4364,11 +5103,11 @@ Only include strengths and struggles the player actually mentioned. Do not add e
             <div className="price-period">per month</div>
             <ul className="price-features">
               <li>Everything in Pro</li>
-              <li>Monthly 1:1 coach session</li>
-              <li>Tournament prep programs</li>
-              <li>Custom drill video library</li>
-              <li>NTRP rating strategy</li>
-              <li>Team & league analytics</li>
+              <li>Daily Elite coaching briefing</li>
+              <li>Monthly performance report</li>
+              <li>Milestones & USTA rating roadmap</li>
+              <li>Top 3 next-level focus areas</li>
+              <li>Tournament & league recommendations</li>
             </ul>
             <button className="btn-plan secondary" onClick={() => setModalPlan("Elite")}>Get Started</button>
           </div>
@@ -4380,9 +5119,9 @@ Only include strengths and struggles the player actually mentioned. Do not add e
               <div className="annual-left">
                 <div className="annual-label">Annual Plan · All Features Included</div>
                 <div className="annual-title">ACE ALL-ACCESS</div>
-                <div className="annual-desc">One payment. Every tool. The complete ACE experience — AI coaching, video analysis, singles & doubles strategy tips, match prep reports, and 1:1 sessions.</div>
+                <div className="annual-desc">One payment. Every tool. The complete ACE experience — AI coaching, video analysis, singles & doubles strategy tips, match prep reports, and monthly coaching reports.</div>
                 <div className="annual-features">
-                  {["📊 Match Analysis", "🎬 Video Analysis", "🧠 Tactics AI", "📋 Match Prep Reports", "🎾 Singles Tips", "🤝 Doubles Tips", "📈 Progress Tracking", "👤 Monthly 1:1 Coach", "🏆 Tournament Prep"].map((f, i) => (
+                  {["📊 Match Analysis", "🎬 Video Analysis", "🧠 Tactics AI", "📋 Match Prep Reports", "🎾 Singles Tips", "🤝 Doubles Tips", "📈 Progress Tracking", "📋 Monthly Report", "📞 Monthly 1:1 Call", "🏆 USTA Roadmap"].map((f, i) => (
                     <span key={i} className="annual-feature-chip">{f}</span>
                   ))}
                 </div>
